@@ -1,0 +1,16 @@
+2020/09/27 11:57:37 [notice] 31592#3332: sockinit() attempting to access sockapi
+2020/09/27 11:57:37 [notice] 31592#3332: Access to sockapi succeded!
+2020/09/27 11:57:37 [notice] 31592#3332: using sockapi from "4;152;"
+2020/09/27 11:57:39 [notice] 13972#32284: sockinit() attempting to access sockapi
+2020/09/27 11:57:39 [notice] 13972#32284: Access to sockapi succeded!
+2020/09/27 11:57:39 [notice] 13972#32284: using sockapi from "4;8;"
+2020/09/27 12:07:52 [notice] 14520#26940: Fatal: wait for sockapi failed
+2020/09/27 12:57:50 [error] 31592#30836: *23 CreateFile() "D:\download\nginx 1.7.11.3 Gryphon/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.8.13, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.8.5", referrer: "http://192.168.8.5/"
+2020/09/27 13:09:16 [error] 31592#30836: *34 live: already publishing, client: 192.168.8.13, server: 0.0.0.0:1935
+2021/04/10 11:58:36 [emerg] 15156#28496: CreateFile() "F:\软件相关\开发软件\nginx_ffmpeg\nginx 1.7.11.3 Gryphon/conf\nginx-win.conf" failed (1113: No mapping for the Unicode character exists in the target multi-byte code page)
+2021/04/10 12:00:45 [notice] 21964#27892: sockinit() attempting to access sockapi
+2021/04/10 12:00:45 [notice] 21964#27892: Access to sockapi succeded!
+2021/04/10 12:00:45 [notice] 21964#27892: using sockapi from "4;80;"
+2021/04/10 12:00:45 [notice] 8784#7172: sockinit() attempting to access sockapi
+2021/04/10 12:00:45 [notice] 8784#7172: Access to sockapi succeded!
+2021/04/10 12:00:45 [notice] 8784#7172: using sockapi from "4;8;"
