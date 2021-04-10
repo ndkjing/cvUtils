@@ -4,7 +4,8 @@ from matplotlib import pyplot as plt
 import os
 
 # 文件路径
-img_path = '../imgs/lena.png'
+# img_path = '../imgs/lena.png'
+img_path = './tecent_1.png'
 img_dir, img_name = os.path.split(img_path)[0], os.path.split(img_path)[1]
 write_path = os.path.join(
     img_dir,
