@@ -1,5 +1,7 @@
 import cv2
 import time
+import subprocess
+
 
 class VideoFrame:
     def __init__(self, src=None):
@@ -39,21 +41,62 @@ class VideoFrame:
             ret, frame = cap.read()
             if frame is None:
                 continue
-            print(frame.shape)
             resize_frame = cv2.resize(frame, (1080, 640))
-            print(resize_frame.shape)
+            print('row shape', frame.shape, 'resize shape', resize_frame.shape)
             cv2.imshow('frame', resize_frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         cap.release()
         cv2.destroyAllWindows()
 
+    def rtmp_push(self, rtmp_addr='rtmp://192.168.8.19:1935/live/home'):
+        """
+        parm: rtmp_addr 推流地址
+        """
+        # 读取视频并获取属性
+        cap = cv2.VideoCapture(self.src)
+        size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+        sizeStr = str(size[0]) + 'x' + str(size[1])
+        # print(sizeStr)
+        # 第一个参数为ffmpeg地址
+        command = [r'F:\downloads\nginx_ffmpeg\ffmpeg\bin\ffmpeg.exe',
+                   '-y', '-an',
+                   '-f', 'rawvideo',
+                   '-vcodec', 'rawvideo',
+                   '-pix_fmt', 'bgr24',
+                   '-s', sizeStr,
+                   '-r', '25',
+                   '-i', '-',
+                   '-c:v', 'libx264',
+                   '-pix_fmt', 'yuv420p',
+                   '-preset', 'ultrafast',
+                   '-f', 'flv',
+                   rtmp_addr]
+
+        pipe = subprocess.Popen(command
+                                , shell=False
+                                , stdin=subprocess.PIPE
+                                )
+
+        while cap.isOpened():
+            success, frame = cap.read()
+            if success:
+                '''
+                对frame进行识别处理
+                '''
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                pipe.stdin.write(frame.tostring())
+        cap.release()
+        pipe.terminate()
 
 if __name__ == '__main__':
     # obj = SaveVideo(src = 'rtsp://admin:lukuang123@192.168.3.133:554/MPEG-4/ch1/sub/av_stream')
     # obj = VideoProcess(src='rtsp://admin:123456@192.168.1.100:554/ch1/0')
     # obj = VideoProcess(src='rtmp://rtmp01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd')
     # obj = VideoProcess(src='https://flvopen.ys7.com:9188/openlive/930b954900cf4464bffec9079fd179b8.hd.flv')
-    obj = VideoFrame(src='https://hls01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd.m3u8')
+    # obj = VideoFrame(src='https://hls01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd.m3u8')
+    obj = VideoFrame(0)
     # obj.save_video()
-    obj.show_video()
+    # obj.show_video()
+    obj.rtmp_push()
