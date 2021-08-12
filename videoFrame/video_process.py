@@ -1,13 +1,10 @@
-"""
-从摄像头保存视频
-"""
 import cv2
 import time
 
-
-class VideoProcess:
+class VideoFrame:
     def __init__(self, src=None):
         """
+        视频处理，保存视频，修改视频格式，播放rtsp视频流
         src 为录制视频路径
         例如：0 表示电脑默认第一个摄像头
             rtsp地址如下：rtsp://admin:xxl12345@192.168.8.69:554/MPEG-4/ch1/sub/av_stream
@@ -54,6 +51,9 @@ class VideoProcess:
 
 if __name__ == '__main__':
     # obj = SaveVideo(src = 'rtsp://admin:lukuang123@192.168.3.133:554/MPEG-4/ch1/sub/av_stream')
-    obj = VideoProcess(src='rtsp://admin:123456@192.168.1.100:554/ch1/0')
+    # obj = VideoProcess(src='rtsp://admin:123456@192.168.1.100:554/ch1/0')
+    # obj = VideoProcess(src='rtmp://rtmp01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd')
+    # obj = VideoProcess(src='https://flvopen.ys7.com:9188/openlive/930b954900cf4464bffec9079fd179b8.hd.flv')
+    obj = VideoFrame(src='https://hls01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd.m3u8')
     # obj.save_video()
     obj.show_video()

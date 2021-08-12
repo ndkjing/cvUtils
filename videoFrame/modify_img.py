@@ -1,3 +1,4 @@
+# 修改图像 大小，位置，名称，旋转
 import os
 import cv2
 
