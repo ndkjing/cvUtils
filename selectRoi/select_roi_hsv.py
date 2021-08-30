@@ -46,6 +46,7 @@ def select_roi():
 
     # Display cropped image
     cv2.imshow("image_roi", imCrop)
+    print('write_path',write_path)
     cv2.imwrite(write_path, imCrop)
     cv2.waitKey(0)
 
@@ -200,9 +201,9 @@ def hsv_image_threshold():
 
 
 if __name__ == '__main__':
-    # 选择目标区域
+    # 1 选择目标区域
     # select_roi()
-    # 分析hsv值
+    # 2 分析hsv值
     # analyse_hsv()
-    # 调节分割阈值
+    # 3 调节分割阈值
     hsv_image_threshold()
