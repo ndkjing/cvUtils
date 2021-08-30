@@ -41,9 +41,10 @@ class VideoFrame:
             ret, frame = cap.read()
             if frame is None:
                 continue
-            resize_frame = cv2.resize(frame, (1080, 640))
-            print('row shape', frame.shape, 'resize shape', resize_frame.shape)
-            cv2.imshow('frame', resize_frame)
+            # resize_frame = cv2.resize(frame, (1080, 640))
+            # print('row shape', frame.shape, 'resize shape', resize_frame.shape)
+            cv2.imshow('frame', frame)
+            # cv2.imshow('frame', resize_frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         cap.release()
@@ -51,7 +52,7 @@ class VideoFrame:
 
     def rtmp_push(self, rtmp_addr='rtmp://192.168.8.19:1935/live/home'):
         """
-        parm: rtmp_addr 推流地址
+        parm: rtmp_addr 推流地址 rtmp://192.168.8.19:1935/live/home rtmp://192.168.199.238:1935/stream/example  rtmp://47.97.183.24:1935/stream/example
         """
         # 读取视频并获取属性
         cap = cv2.VideoCapture(self.src)
@@ -72,7 +73,21 @@ class VideoFrame:
                    '-preset', 'ultrafast',
                    '-f', 'flv',
                    rtmp_addr]
-
+        """
+        command = [r'F:\downloads\nginx_ffmpeg\ffmpeg\bin\ffmpeg.exe',
+                   '-y', '-an',
+                   '-f', 'rawvideo',
+                   '-vcodec', 'rawvideo',
+                   '-pix_fmt', 'bgr24',
+                   '-s', sizeStr,
+                   '-r', '25',
+                   '-i', '-',
+                   '-c:v', 'libx264',
+                   '-pix_fmt', 'yuv420p',
+                   '-preset', 'ultrafast',
+                   '-f', 'flv',
+                   rtmp_addr]
+        """
         pipe = subprocess.Popen(command
                                 , shell=False
                                 , stdin=subprocess.PIPE
@@ -90,13 +105,17 @@ class VideoFrame:
         cap.release()
         pipe.terminate()
 
+
 if __name__ == '__main__':
-    # obj = SaveVideo(src = 'rtsp://admin:lukuang123@192.168.3.133:554/MPEG-4/ch1/sub/av_stream')
+    # src = r'F:\软件相关\开发软件\ffmpeg\bin\ffmpeg_test.flv'
+    src = 'rtmp://rtmp01open.ys7.com:1935/v3/openlive/D50551834_1_2?expire=1657329096&id=335347591388602368&t=e1dd42835fd9bece1478d0d19d68b727dafbb8630d96a1272d65c3f389dd9bca&ev=100'
+    # obj = SaveVideo(src = 'rtsp://admin:lukuang123@192.168.199.171:554/MPEG-4/ch1/sub/av_stream')
     # obj = VideoProcess(src='rtsp://admin:123456@192.168.1.100:554/ch1/0')
     # obj = VideoProcess(src='rtmp://rtmp01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd')
     # obj = VideoProcess(src='https://flvopen.ys7.com:9188/openlive/930b954900cf4464bffec9079fd179b8.hd.flv')
     # obj = VideoFrame(src='https://hls01open.ys7.com/openlive/930b954900cf4464bffec9079fd179b8.hd.m3u8')
-    obj = VideoFrame(0)
+    # obj = VideoFrame(r'F:\datasets\ffmpeg_test.flv')
+    obj = VideoFrame(src)
     # obj.save_video()
-    # obj.show_video()
-    obj.rtmp_push()
+    obj.show_video()
+    # obj.rtmp_push()
