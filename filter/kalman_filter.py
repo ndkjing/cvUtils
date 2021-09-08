@@ -63,7 +63,8 @@ for k in range(len(z_nosie)):
     # 预测过程
     my_filter.predict()
     # 利用观测值进行更新
-    my_filter.update(z_nosie[k])
+    print('k',k,z_nosie[k])
+    my_filter.update([z_nosie[k]])
     # do something with the output
     x = my_filter.x
     # 收集卡尔曼滤波后的速度和位置信息
@@ -100,6 +101,7 @@ plt.scatter(range(len(z)), dif_list, color='b', label="位置偏差")
 plt.scatter(range(len(z)), v_dif_list, color='y', label="速度偏差")
 plt.legend()
 plt.show()
+
 
 # 2.卡尔曼滤波器参数的变化
 # 首先定义方法将卡尔曼滤波器的参数堆叠成一个矩阵，右下角补0，我们看一下参数的变化。
