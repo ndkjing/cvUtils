@@ -1,3 +1,7 @@
+"""
+扩展卡尔曼滤波
+GPS 与imu数据融合
+"""
 import math
 
 import com_data
@@ -39,15 +43,14 @@ class IsUpdate:
         self.is_update_gps = False
 
 
-def get_gps_data(is_update_obj):
+def get_gps_data(is_update_obj,gps_config):
     global init_gps
     global current_gps
     global sum_ekf_error
-    serial_obj1 = com_data.ComData('com13',
-                                   115200,
+    serial_obj1 = com_data.ComData(gps_config[0],
+                                   gps_config[1],
                                    timeout=1,
                                    )
-    current_lng_lat = None
     pre_lng_lat = None
     error_list = deque(maxlen=50)
     while True:
@@ -95,10 +98,10 @@ def ekf_data(v, yawrate, z, pre_x):
     xDR = ekf.motion_model(pre_x, u)
     t_dr = xDR
     # 估计值  状态协方差
-    z = np.array([[z[0]],[z[1]]])
+    z = np.array([[z[0]], [z[1]]])
     xEst, PEst = ekf.ekf_estimation(pre_x, PEst, z, ud)
     # print('xEst',xEst)
-    sum_ekf_error += math.sqrt(xEst[0]**2 +xEst[1]**2)
+    sum_ekf_error += math.sqrt(xEst[0] ** 2 + xEst[1] ** 2)
     return xDR, xEst
 
 
@@ -111,10 +114,12 @@ def main():
     global hz
     global pre_x
     is_update_obj = IsUpdate()
-    imu_obj = get_imu_data.GetImuData(port='com11', baud=115200)
+    imu_config = ['com13', 115200]
+    gps_config = ['com11', 115200]
+    imu_obj = get_imu_data.GetImuData(port=imu_config[0], baud=imu_config[1])
     # 打印数据
     t1 = threading.Thread(target=imu_obj.get_data, args=(is_update_obj,))
-    t2 = threading.Thread(target=get_gps_data, args=(is_update_obj,))
+    t2 = threading.Thread(target=get_gps_data, args=(is_update_obj,gps_config))
     t1.setDaemon(True)
     t2.setDaemon(True)
 
@@ -141,7 +146,8 @@ def main():
             hxDR = np.hstack((hxDR, xDR))
         if is_update_obj.is_update_gps:
             is_update_obj.is_update_gps = False
-            xDR, xEst = ekf_data(imu_obj.v, imu_obj.yaw_rate_z, [current_gps[0], current_gps[1], imu_obj.v, imu_obj.yaw_rate_z], xEst)
+            xDR, xEst = ekf_data(imu_obj.v, imu_obj.yaw_rate_z,
+                                 [current_gps[0], current_gps[1], imu_obj.v, imu_obj.yaw_rate_z], xEst)
             # store data history
             # 观测值
             hz = np.hstack((hz, np.asarray(current_gps).reshape(2, 1)))
