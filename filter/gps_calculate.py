@@ -126,10 +126,10 @@ def main():
     # t2.join()
     while True:
         time.sleep(0.001)
-        # 判断接受到了新数据
-        # print(init_gps, current_gps)
+        # 初始化GPS后才开始计算
         if init_gps is None:
             continue
+        # 判断接受到了新数据
         if is_update_obj.is_update_imu:
             is_update_obj.is_update_imu = False
             xDR, xEst = ekf_data(imu_obj.v, imu_obj.yaw_rate_z,
@@ -139,21 +139,6 @@ def main():
             hxEst = np.hstack((hxEst, xEst))
             # 预测值
             hxDR = np.hstack((hxDR, xDR))
-            # if hxEst.shape[1] % 10 == 0:
-            #     # 清除原有图像
-            #     plt.cla()
-            #     plt.plot(hz[0, :], hz[1, :], ".g")
-            #     # plt.plot(hxTrue[0, :].flatten(),
-            #     #          hxTrue[1, :].flatten(), "-b")
-            #     plt.plot(hxDR[0, :].flatten(),
-            #              hxDR[1, :].flatten(), "-k")
-            #     # plt.plot(hxEst[0, :].flatten(),
-            #     #          hxEst[1, :].flatten(), "-r")
-            #     plt.axis("equal")
-            #     plt.grid(True)
-            #     # 暂停
-            #     plt.pause(0.1)
-            #     plt.show()
         if is_update_obj.is_update_gps:
             is_update_obj.is_update_gps = False
             xDR, xEst = ekf_data(imu_obj.v, imu_obj.yaw_rate_z, [current_gps[0], current_gps[1], imu_obj.v, imu_obj.yaw_rate_z], xEst)

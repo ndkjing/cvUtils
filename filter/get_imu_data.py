@@ -189,11 +189,14 @@ class GetImuData:
             self.pre_data.append([data, time.time()])
             # 求解速度
             if len(self.pre_data) >= 1:
-                delta_t = time.time() - self.pre_data[0][1]
-                self.v_x += self.pre_data[0][0][0] * delta_t
-                self.v_y += self.pre_data[0][0][1] * delta_t
-                self.v = (self.v_x ** 2 + self.v_y ** 2) ** 1 / 2
-                self.yaw_rate_z = self.pre_data[0][0][5]
+                try:
+                    delta_t = time.time() - self.pre_data[0][1]
+                    self.v_x += self.pre_data[0][0][0] * delta_t
+                    self.v_y += self.pre_data[0][0][1] * delta_t
+                    self.v = (self.v_x ** 2 + self.v_y ** 2) ** 1 / 2
+                    self.yaw_rate_z = self.pre_data[0][0][5]
+                except Exception as e:
+                    print({'error':e})
                 # print('self.v', self.v)
 
     def imu_integration(q):
